@@ -22,26 +22,31 @@ export const createUser = (req, res) => {
 
 export const getUser = (req, res) => {
   const { id } = req.params;
-  const foundUser = users.find((user) => user.id === id);
-  res.send(foundUser);
+  UserModel.findById(id)
+    .then((user) => res.json(user))
+    .catch((err) => res.status(400).json('Error: ' + err));
 };
 
 export const deleteUser = (req, res) => {
   const { id } = req.params;
 
-  users = users.filter((user) => user.id !== id);
-
-  res.send(`User with the id ${id} deleted`);
+  UserModel.findByIdAndDelete(id)
+    .then(() => res.json('User deleted.'))
+    .catch((err) => res.status(400).json('Error: ' + err));
 };
 
 export const updateUser = (req, res) => {
   const { id } = req.params;
   const { firstName, lastName, age } = req.body;
-  const user = users.find((user) => user.id === id);
 
-  if (firstName) user.firstName = firstName;
-  if (lastName) user.lastName = lastName;
-  if (age) user.age = age;
+  UserModel.findById(id)
+    .then((user) => {
+      if (firstName) user.firstName = firstName;
+      if (lastName) user.lastName = lastName;
+      if (age) user.age = age;
 
-  res.send(`User with the id ${id} has been updated`);
+      user.save();
+      res.json('User updated!');
+    })
+    .catch((err) => res.status(400).json('Error: ' + err));
 };
