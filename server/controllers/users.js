@@ -1,9 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
+import { UserModel } from '../models/userModel.js';
 
 let users = [];
 
 export const getUsers = (req, res) => {
-  res.send(users);
+  UserModel.find({})
+    .then((user) => res.json(user))
+    .catch((err) => res.status(400).json('Error: ' + err));
 };
 
 export const createUser = (req, res) => {
@@ -12,8 +15,9 @@ export const createUser = (req, res) => {
 
   const userWithId = { ...user, id: userId };
 
-  res.send('POST ROUTE REACHED');
-  users.push(userWithId);
+  const data = new UserModel(userWithId);
+  const val = data.save();
+  res.status(201).json(val);
 };
 
 export const getUser = (req, res) => {
