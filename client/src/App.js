@@ -1,25 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import Users from './components/Users';
+import AddUser from './components/AddUser';
+import EditUser from './components/EditUser';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const App = () => {
-  const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/users')
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data);
-        setIsLoading(false);
-      });
-  }, []);
-
   return (
     <div>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        users.map((user, index) => <p key={index}>{user.firstName}</p>)
-      )}
+      <Router>
+        <Routes>
+          <Route path='/users' element={<Users />} />
+          <Route path='/add-user' element={<AddUser />} />
+          <Route path='/edit-user/:id' element={<EditUser />} />
+        </Routes>
+      </Router>
     </div>
   );
 };
