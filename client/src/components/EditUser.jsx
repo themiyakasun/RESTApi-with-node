@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 const EditUser = () => {
   const { id } = useParams();
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({ firstName: '', lastName: '', age: '' });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,15 +17,20 @@ const EditUser = () => {
         });
         setIsLoading(false);
       });
-  });
+  }, [id]);
 
-  const handleInputChange = (e, fieldName) => {
-    setUser({ ...user, [fieldName]: e.target.value });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
   };
+
   const submitUser = (e) => {
     e.preventDefault();
     fetch(`/users/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -51,22 +56,25 @@ const EditUser = () => {
         <input
           type='text'
           placeholder='First Name'
+          name='firstName'
           value={user.firstName}
-          onChange={(e) => handleInputChange(e, 'firstName')}
+          onChange={handleInputChange}
         />
         <input
           type='text'
           placeholder='Last Name'
+          name='lastName'
           value={user.lastName}
-          onChange={(e) => handleInputChange(e, 'lastName')}
+          onChange={handleInputChange}
         />
         <input
           type='text'
           placeholder='Age'
+          name='age'
           value={user.age}
-          onChange={(e) => handleInputChange(e, 'age')}
+          onChange={handleInputChange}
         />
-        <button type='submit'>Add User</button>
+        <button type='submit'>Edit User</button>
       </form>
     </div>
   );

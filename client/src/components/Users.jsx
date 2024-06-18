@@ -23,6 +23,10 @@ const Users = () => {
       });
   };
 
+  const handleEdit = (id) => {
+    window.location.href = `/edit-user/${id}`;
+  };
+
   return (
     <div>
       {isLoading ? (
@@ -44,7 +48,7 @@ const Users = () => {
               <td>{user.age}</td>
               <td>
                 <button onClick={() => deleteUser(user._id)}>Delete</button>
-                <button>Edit</button>
+                <button onClick={() => handleEdit(user._id)}>Edit</button>
               </td>
             </tr>
           </table>
